@@ -1,0 +1,328 @@
+:root {
+  --dark-white: #dfe4ea;
+  --grey-white: #f0f0f0;
+  --white: #F7F7F7;
+  --black: #2B2B2B;
+  --blue: #99B8C4;
+  --yellow: #F9DB61;
+  --dark-blue: #33495F;
+}
+
+* {
+  position: relative;
+}
+body, html {
+  width: 100%;
+  height: 100%;
+  font-family: monospace;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+}
+.wrap {
+  width: 300px;
+  height: 390px;
+  border-radius: 5px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+.wrap.day {
+  background-color: var(--dark-white);
+  color: var(--black);
+  transition: 0.5s all ease;
+}
+.wrap.night {
+  background-color: var(--dark-blue);
+  color: var(--white);
+  transition: 0.5s all ease;
+}
+.wrap .weather-wrap {
+  position: absolute;
+  top: 40px;
+  left: 75px;
+  background-color: var(--dark-white);
+}
+.wrap .text-wrap {
+  width: 100%;
+  position: absolute;
+  top: 250px;
+  text-align: center;
+}
+.text-wrap .city {
+  font-size: 18px;
+  font-weight: 600;
+}
+.text-top {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.text-wrap .weather-text {
+  font-size: 20px;
+  margin-top: 10px;
+}
+.text-wrap .temp {
+  font-size: 26px;
+  margin-top: 10px;
+}
+
+.clouds {
+  z-index: 2;
+  animation: 4s cloudFloat reverse infinite;
+  -webkit-filter: drop-shadow(rgba(0, 0, 0, 0.15) 0px 5px 8px);
+  filter: drop-shadow(rgba(0, 0, 0, 0.15) 0px 5px 8px);
+}
+.clouds-min {
+  transform: scale(0.7);
+  position: absolute;
+  left: 150px;
+  top: -5px;
+  z-index: 1;
+  -webkit-filter: drop-shadow(rgba(0, 0, 0, 0.15) 0px 5px 8px);
+  filter: drop-shadow(rgba(0, 0, 0, 0.15) 0px 5px 8px);
+  animation: 5s cloudFloatScale reverse infinite;
+}
+.clouds-min .cloud {
+  background-color: var(--grey-white);
+}
+.cloud_1 {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--white);
+  position: absolute;
+  top: 50px;
+  left: 20px;
+  z-index: 2;
+}
+.cloud_2 {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: var(--white);
+  position: absolute;
+  left: 65px;
+  top: 40px;
+  z-index: 2;
+}
+.cloud_3 {
+  width: 150px;
+  height: 50px;
+  background-color: var(--white);
+  border-radius: 30px;
+  position: absolute;
+  top: 80px;
+  z-index: 3;
+}
+.sun {
+  background-color: var(--yellow);
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  position: absolute;
+  left: 45px;
+  top: 0px;
+  z-index: 1;
+  animation: 5s sunScale infinite; 
+  -webkit-filter: drop-shadow(5px 6px 15px rgba(249, 219, 97, 0.7));
+  filter: drop-shadow(5px 6px 15px rgba(249, 219, 97, 0.7));
+}
+.rains {
+  position: absolute;
+  top: 140px;
+  left: 0px;
+}
+.snows {
+  position: absolute;
+  top: 150px;
+  left: 0px;
+}
+.rain-row {
+  width: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-bottom: 10px;
+}
+.snow-row {
+  width: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+.rain-row:nth-child(2), .snow-row:nth-child(2) {
+  left: 10px;
+}
+.rain {
+  width: 10px;
+  height: 25px;
+  background-color: var(--blue);
+  border-radius: 10px;
+  transform: rotate(30deg);
+}
+.snow {
+  width: 15px;
+  height: 15px;
+  background-color: var(--white);
+  border-radius: 50%;
+}
+.rain-row:nth-child(1) .rain {
+  animation: 2s rainDrop infinite;
+}
+.rain-row:nth-child(2) .rain {
+  animation: 2s 0.2s rainDrop infinite;
+}
+.snow-row:nth-child(1) .snow {
+  animation: 2s snowDrop infinite;
+}
+.snow-row:nth-child(2) .snow {
+  animation: 2s 0.2s snowDrop infinite;
+}
+.lightnings {
+  position: absolute;
+  top: 125px;
+  left: 70px;
+  z-index: 1;
+  animation: 2s lightning reverse infinite;
+  -webkit-filter: drop-shadow(5px 6px 10px rgba(249, 219, 97, 0.7));
+  filter: drop-shadow(5px 6px 10px rgba(249, 219, 97, 0.7));
+}
+.lightning_1 {
+  background-color: var(--yellow);
+  width: 10px;
+  height: 15px;
+  -ms-transform: skewX(-20deg); 
+  transform: skewX(-20deg);
+  left: -2px;
+}
+.lightning_2 {
+  background-color: var(--yellow);
+  width: 25px;
+  height: 10px;
+  left: -5px;
+}
+.lightning_3 {
+  background-color: var(--yellow);
+  width: 10px;
+  height: 25px;
+  -ms-transform: skewX(-30deg); 
+  transform: skewX(-30deg);
+  left: 8px;
+  top: -10px;
+}
+.foggys {
+  position: absolute;
+  top: 145px;
+  left: 40px;
+  z-index: 1;
+}
+.foggy_1 {
+  background-color: var(--white);
+  width: 90px;
+  height: 15px;
+  border-radius: 30px;
+  left: -10px;
+  animation: 3s cloudFloat reverse infinite;
+}
+.foggy_2 {
+  background-color: var(--white);
+  width: 90px;
+  height: 15px;
+  border-radius: 30px;
+  left: 10px;
+  top: 10px;
+  animation: 3s 1s cloudFloat reverse infinite;
+}
+.time {
+  margin-top: 10px;
+}
+
+/* ========== animation ========== */
+@keyframes rainDrop {
+  10% {
+    transform: rotate(30deg)  translate(0px,0px);
+  }
+  50% {
+    transform: rotate(30deg)  translate(-5px,10px);
+  }
+  100% {
+    transform: rotate(30deg)  translate(0px,0px);
+  }
+}
+@keyframes snowDrop {
+  10% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+@keyframes cloudFloat {
+  0% {
+    transform: translateX(0px);
+  }
+  50% {
+   transform: translateX(10px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+}
+@keyframes cloudFloatScale {
+  0% {
+    transform: translateX(0px) scale(0.7) scaleX(-1);
+  }
+  50% {
+   transform: translateX(10px) scale(0.7) scaleX(-1);
+  }
+  100% {
+    transform: translateX(0px) scale(0.7) scaleX(-1);
+  }
+}
+@keyframes sunScale {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+   transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lightning {
+  10% {
+    transform: rotate(0deg) translateY(0px);
+  }
+  50% {
+    transform: rotate(15deg) translateY(15px);
+  }
+  100% {
+    transform: rotate(0deg) translateY(0px);
+  }
+}
+
+/* ========== transition ========== */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+/* ========== footer ========== */
+#footer {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+}

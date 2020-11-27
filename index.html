@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js"></script>
+		<link rel="stylesheet" href="index.css">
+	</head>
+	<body>
+		<div id="app">
+			<div class="wrap" v-bind:class="dayAndNight">
+				<div class="weather-wrap">
+					<div class="clouds" v-if="nowWeather != ''">
+						<div class="cloud_1"></div>
+						<div class="cloud_2"></div>
+						<div class="cloud_3"></div>
+					</div>
+					<component v-bind:is="nowWeather" v-bind:key="cityName"></component>
+				</div>
+
+				<div class="text-wrap">
+					<transition name="fade" mode="out-in">
+						<div v-bind:key="cityName">
+							<div class="text-top">
+								<span class="weather-text" >{{nowWeatherText}}</span>
+								<span class="temp">{{temp}}</span>
+							</div>
+							<div class="city">{{cityName}}{{countryName}}</div>
+							<div class="time">{{time}}<div>
+						</div>
+					</transition>
+				</div>
+			</div>
+		  
+			<div id="footer">
+				<div>Data source:<a href="https://openweathermap.org/">Open Weather Map</a></div>
+			</div>
+		</div>
+	</body>
+
+	<script>
+		new Vue({
+		  el: '#app',
+		  data: {
+		    playIndex: 0,
+		    dayAndNight: "day",
+		    nowWeather: "",
+		    nowWeatherText: "",
+		    cityName: "",
+		    countryName: "",
+		    time: "",
+		    temp: "",
+		    cityList: {},
+		    cityCount: 0
+		  },
+		  created() {
+		  },
+		  mounted () {
+		    let _self = this;
+		    axios
+		      .get('https://api.openweathermap.org/data/2.5/group?id=7280290,5128581,2643743,1850147,1835847&appid=15c45a9d3c00502d77c8c269a41a7c93&units=metric&lang=zh_tw')
+		      .then(function (response) {
+		        _self.cityList = response.data.list;
+		        _self.cityCount = response.data.cnt;
+		        _self.weatherChange();
+		      })
+		      .catch(function (error) {
+		        console.log(error);
+		      });
+		  },
+		  methods: {
+		    getRandom: function(n, m) {
+		      var num = Math.floor(Math.random() * (m - n + 1) + n);
+		      return num;
+		    },
+		    secToHr: function(sec) {
+		      var hr = sec/60/60;
+		      return hr;
+		    },
+		    timeToLocal: function(timeZone) {
+		      var localTime = new Date();
+		      var localTimezone = localTime.getTimezoneOffset()/60*-1;
+		      var UTCTimezone = timeZone - localTimezone;
+		      var time = new Date(localTime.setHours(localTime.getHours() + UTCTimezone)).toString();
+		      var hr = time.split(" ")[4].split(":")[0];
+		      
+		      if(hr >= 6 && hr < 18){
+		        this.dayAndNight = "day";
+		      }else{
+		        this.dayAndNight = "night";
+		      }
+		      
+		      time = time.split(" GMT")[0];
+		      return time;
+		    },
+		    weatherChange: function() {
+		      let _self = this;
+		      setTimeout(function(){
+		        
+		        if(_self.playIndex == (_self.cityCount -1) ){
+		          _self.playIndex = 0;
+		          // if(_self.dayAndNight == "day"){
+		          //   _self.dayAndNight = "night";
+		          // }else{
+		          //   _self.dayAndNight = "day";
+		          // }
+		        }else{
+		          _self.playIndex++;
+		        }
+		        
+		        var cityWeather = _self.cityList[_self.playIndex].weather[0].main;
+		        _self.nowWeatherText = cityWeather;
+		        
+		        if(cityWeather == "Rain"){
+		          _self.nowWeather = "Rain";
+		        }else if(cityWeather == "Drizzle"){
+		          _self.nowWeather = "Drizzle";
+		        }else if(cityWeather == "Clear"){
+		          _self.nowWeather = "Clear";
+		        }else if(cityWeather == "Snow"){
+		          _self.nowWeather = "Snow";
+		        }else if(cityWeather == "Clouds"){
+		          _self.nowWeather = "Clouds";
+		        }else if(cityWeather == "Thunderstorm"){
+		          _self.nowWeather = "Thunderstorm";
+		        }else{
+		          //  起霧？ Mist Smoke Haze Dust Fog Sand Dust Ash Squall Tornado 
+		          _self.nowWeather = "Foggy";
+		        }
+		        _self.cityName = _self.cityList[_self.playIndex].name;
+		        _self.temp = _self.tempFormatC(_self.cityList[_self.playIndex].main.temp);
+		        _self.countryName = ", " + _self.cityList[_self.playIndex].sys.country;
+		        _self.time = _self.timeToLocal(_self.secToHr(_self.cityList[_self.playIndex].sys.timezone));
+		        
+		        // 迴圈循環自動播放切換城市
+		        _self.weatherChange();
+		      }, (6 * 1000));
+		    },
+		    tempFormatC: function(tempC){
+		      return Math.floor(tempC) + "°C"
+		    }
+		  },
+		  components: {
+		    'Clear': {
+		      template: `<div class="sun"></div>`
+		    },
+		    'Rain': {
+		      template: `
+		                  <div class="rains">
+		                    <div class="rain-row">
+		                      <div class="rain"></div>
+		                      <div class="rain"></div>
+		                      <div class="rain"></div>
+		                    </div>
+		                    <div class="rain-row">
+		                      <div class="rain"></div>
+		                      <div class="rain"></div>           
+		                      <div class="rain"></div>
+		                    </div>
+		                  </div>`
+		    },
+		    'Drizzle': {
+		      template: `
+		                <div class="rains">
+		                  <div class="rain-row">
+		                    <div class="rain"></div>
+		                    <div class="rain"></div>
+		                  </div>
+		                  <div class="rain-row">
+		                    <div class="rain"></div>
+		                    <div class="rain"></div>     
+		                  </div>
+		                </div>`
+		    },
+		    'Clouds': {
+		      template: `
+		                <div class="clouds-min">
+		                  <div class="cloud_1"></div>
+		                  <div class="cloud_2"></div>
+		                  <div class="cloud_3"></div>
+		                </div>`
+		    },
+		    'Snow': {
+		      template: `
+		                <div class="snows">
+		                  <div class="snow-row">
+		                    <div class="snow"></div>
+		                    <div class="snow"></div>
+		                    <div class="snow"></div>
+		                  </div>
+		                  <div class="snow-row">
+		                    <div class="snow"></div>
+		                    <div class="snow"></div>           
+		                    <div class="snow"></div>
+		                  </div>
+		               </div>`
+		    },
+		    'Thunderstorm': {
+		      template: `
+		                <div class="lightnings">
+		                  <div class="lightning_1"></div>
+		                  <div class="lightning_2"></div>
+		                  <div class="lightning_3"></div>
+		               </div>`
+		    },
+		    'Foggy': {
+		      template: `
+		                <div class="foggys">
+		                  <div class="foggy_1"></div>
+		                  <div class="foggy_2"></div>
+		               </div>`
+		    }
+		  }
+		})
+	</script>
+</html>
