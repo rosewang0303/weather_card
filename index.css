@@ -45,6 +45,13 @@ body, html {
   top: 40px;
   left: 75px;
   background-color: var(--dark-white);
+  text-align: center;
+}
+.wrap .weather-wrap .loading {
+  font-size: 20px;
+  font-weight: 500;
+  top: 80px;
+  left: 20px;
 }
 .wrap .text-wrap {
   width: 100%;
